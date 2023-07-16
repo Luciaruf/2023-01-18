@@ -6,6 +6,11 @@ package it.polito.tdp.nyc;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
+
 import it.polito.tdp.nyc.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +22,7 @@ import javafx.scene.control.TextField;
 public class FXMLController {
 
 	private Model model;
+	Graph<String,DefaultWeightedEdge> graph;
 	
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -34,7 +40,7 @@ public class FXMLController {
     private Button btnPercorso; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbProvider"
-    private ComboBox<?> cmbProvider; // Value injected by FXMLLoader
+    private ComboBox<String> cmbProvider; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtDistanza"
     private TextField txtDistanza; // Value injected by FXMLLoader
@@ -61,6 +67,11 @@ public class FXMLController {
     @FXML
     void doCreaGrafo(ActionEvent event) {
     	
+    	String provider = this.cmbProvider.getValue();
+    	
+    	this.graph = this.model.creaGrafo(provider);
+    	
+    	this.txtResult.appendText("#VERTICI: "+this.graph.vertexSet().size()+"\n"+ "#ARCHI: "+this.graph.edgeSet().size());
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -77,5 +88,6 @@ public class FXMLController {
 
     public void setModel(Model model) {
     	this.model = model;
+    	this.cmbProvider.getItems().addAll(this.model.getProvider());
     }
 }

@@ -36,5 +36,50 @@ public class NYCDao {
 		return result;
 	}
 	
+	public List<String> getProvider(){
+		String sql = "SELECT DISTINCT provider "
+				+ "FROM `nyc_wifi_hotspot_locations` ";
+		List<String> result = new ArrayList<>();
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				result.add(res.getString("provider"));
+			}
+			
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("SQL Error");
+		}
+
+		return result;
+	}
+	
+	public List<String> getVertices(String provider){
+		String sql = "SELECT DISTINCT location "
+				+ "FROM `nyc_wifi_hotspot_locations` "
+				+ "WHERE provider = ? ";
+		List<String> result = new ArrayList<>();
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, provider);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				result.add(res.getString("location"));
+			}
+			
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("SQL Error");
+		}
+
+		return result;
+	}
 
 }
